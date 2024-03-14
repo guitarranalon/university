@@ -19,6 +19,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 /**
  * Servlet implementation class LoginServlet
  */
@@ -52,7 +55,7 @@ public class LoginServlet extends HttpServlet {
 			PreparedStatement students = con.prepareStatement("select * from students");
 			
 			ps.setString(1, n);
-			ps.setString(2, p);
+			ps.setString(2, hashString(p));
 			
 			ResultSet rs = ps.executeQuery();
 			ResultSet rsStudents = students.executeQuery();
@@ -82,5 +85,26 @@ public class LoginServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
+	
+   private static String hashString(String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md.digest(input.getBytes());
+
+            // Convert byte array to hex string
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : messageDigest) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 }
