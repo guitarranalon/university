@@ -41,6 +41,7 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
+			response.setContentType("text/html");
 			PrintWriter out = response.getWriter();
 			
 			HttpSession session = request.getSession();			
@@ -72,7 +73,9 @@ public class LoginServlet extends HttpServlet {
 				rd.forward(request, response);
 			} else {
 				out.println("Login failed!");
-				out.println("<a href=login.jsp>Try again!</a>");
+				out.println("<html><body>");
+				out.println("<a href='index.jsp'>Try again!</a>");
+				out.println("</html></body>");
 				
 				request.setAttribute("error", true);
 				// request.getRequestDispatcher("result.jsp").forward(request, response);
